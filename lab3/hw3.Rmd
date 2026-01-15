@@ -57,7 +57,7 @@ mountains$fatality_rate <- c(0.03, 0.10, 0.10, 0.02, 0.07)
 
 **8. Write your data frame to a .csv file called `mountains_data`.**
 ```{r}
-mountains_data <- read.csv("mountains_data.csv")
+write_csv(mountains, "mountains_data.csv")
 ```
 
 **9. Clear your environment panel by clicking on the broom icon. Then read in your `mountains_data.csv` file to a new object called `mountains`.**
@@ -71,7 +71,7 @@ mountains
 
 **10. Use a summary function of your choice to show the structure of your `mountains` data frame.**
 ```{r}
-
+summary(mountains)
 ```
 
 ## Knit and Upload
