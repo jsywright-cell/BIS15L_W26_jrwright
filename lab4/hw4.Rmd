@@ -22,7 +22,6 @@ For this homework, we will be using the `msleep` dataset from the `ggplot2` pack
 msleep
 ```
 
-
 **1. Use a summary function of your choice to get an idea of the structure of the msleep data.**
 
 ```{r}
@@ -44,11 +43,17 @@ ggplot(data=msleep,
   labs(title="Mammals of each vore type")
 ```
 
+
+Herbivores are most represented in the data.
+
 **4. What is the average length of time that mammal sleeps?**
 
 ```{r}
 mean(msleep$sleep_total)
 ```
+
+
+The average time a mammal sleeps is 10.43373 hours.
 
 **5. Use `summary()` to get a quick idea of the range of values for the variable `bodywt`.**
 
@@ -61,7 +66,7 @@ summary(msleep$bodywt)
 ```{r}
 ggplot(data=msleep,
        mapping=aes(x=vore, y=bodywt))+
-  geom_boxplot(mapping=aes(color=vore))+
+  geom_boxplot(mapping=aes(fill=vore))+
   scale_y_log10()+
 labs(title="Body weight (kg) vs vore")
 ```
@@ -77,17 +82,54 @@ ggplot(data=msleep,
 labs(title="Body weight (kg) vs Total sleep time")
 ```
 
+
+Yes, there is a general downward trend in total amount of sleep as body weight increases.
+
 **8. Which vore type tends to sleep the most? Build a plot to support your answer.**
 
 ```{r}
 ggplot(data=msleep,
        mapping=aes(x=vore, y=sleep_total))+
-  geom_boxplot(mapping=aes(fill=vore))
+  geom_boxplot(mapping=aes(fill=vore))+
+  labs(title="Amount of sleep (hrs) vs. vore type")
 ```
+
+
+The insectivore type sleeps the most.
 
 **9. Is there a relationship between brain weight and body weight? Build a plot to support your answer.**
 
+```{r}
+names(msleep)
+```
+
+
+```{r}
+ggplot(data=msleep,
+       mapping=aes(x=bodywt, y=brainwt))+
+  geom_point(na.rm=T, mapping=aes(color=brainwt))+
+  geom_smooth(method=lm, se=T)+
+   scale_x_log10()+
+   scale_y_log10()+
+  labs(title="Brain weight (kg) vs. body weight (kg)")
+
+```
+
+
+Yes, there is a general upward trend in brain weight as body weight increases.
+
 **10. Build one plot of your choice that provides additional insight into the msleep dataset. Be sure to include appropriate labels and a title.**
+
+```{r}
+ggplot(data=msleep,
+       mapping=aes(x=vore, y=brainwt))+
+  geom_boxplot(mapping=aes(fill=vore))+
+  scale_y_log10()+
+  labs(title="Brain weight (kg) vs. vore type")
+```
+
+
+This plot shows the relationships between the brain weights of each vore type. Insectivores have the smallest brain weight of all vore types, while carnivores have the highest median, and herbivores have the highest upper quartile.
 
 ## Knit and Upload
 Please knit your work as an .html file and upload to Canvas. Homework is due before the start of the next lab. No late work is accepted. Make sure to use the formatting conventions of RMarkdown to make your report neat and clean!  
