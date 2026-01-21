@@ -28,15 +28,18 @@ homerange <- read_csv("data/Tamburelloetal_HomeRangeDatabase.csv")
 
 **2. What is the structure of the `homerange` data? Does it have any NA's? Do a quick exploratory analysis of your choice below.**
 ```{r}
-names(homerange)
+str(homerange)
 ```
 
 ```{r}
 glimpse(homerange)
 ```
+```{r}
+names(homerange)
+```
 
 
-Yes, "homerange" has several NAs
+"Homerange" has both numerical and character data, as can be seen in both the str() and glimpse() function. "Homerange" also has several NAs. These two
 
 
 **3. Which animal groups are represented in the data? Make a plot that shows the number in each class.**
@@ -50,10 +53,14 @@ ggplot(data=homerange,
 **4. Are there more carnivores or herbivores represented in the data? Make a plot that shows the number in each trophic guild.**
 ```{r}
 ggplot(data=homerange,
-       mapping=aes(x="trophic.guild"))+
-  geom_boxplot()+
-  labs(title="# of animals in each trophic guild")
+       mapping=aes(x=trophic.guild))+
+  geom_bar(mapping=aes(fill=trophic.guild))+
+  labs(title="# in each trophic guild")
 ```
+
+
+There are more carnivores represented in the data (~340 carnivores vs. ~225 herbivores).
+
 
 **5. Which herbivorous mammals have homeranges greater than 1,000,000 m²? Show only the common name, order, mean homerange size, and mean body mass. Arrange the data in descending order by homerange size and show only the top 10 species.**
 ```{r}
