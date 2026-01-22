@@ -64,37 +64,77 @@ There are more carnivores represented in the data (~340 carnivores vs. ~225 herb
 
 **5. Which herbivorous mammals have homeranges greater than 1,000,000 m²? Show only the common name, order, mean homerange size, and mean body mass. Arrange the data in descending order by homerange size and show only the top 10 species.**
 ```{r}
-
+homerange %>% 
+  select(trophic.guild, common.name, order, mean.hra.m2, mean.mass.g) %>% 
+  filter(trophic.guild=="herbivore") %>% 
+  filter(mean.hra.m2>1000000) %>% 
+  slice_min(mean.hra.m2, n=10) %>% 
+   arrange(desc(mean.hra.m2))
 ```
 
 **6. Which two species have the largest and smallest homerange sizes?**
 ```{r}
-
+homerange %>% 
+  select(species, mean.hra.m2) %>% 
+  slice_min(mean.hra.m2, n=1)
 ```
 
 ```{r}
-
+homerange %>% 
+  select(species, mean.hra.m2) %>% 
+  slice_max(mean.hra.m2, n=1)
 ```
 
 **7. Which carnivorous mammals have the largest homeranges?**
 ```{r}
-
+homerange %>% 
+  select(species, trophic.guild, mean.hra.m2) %>% 
+  filter(trophic.guild=="carnivore") %>% 
+  slice_max(mean.hra.m2, n=1)
 ```
 
 **8. Is there a relationship between body mass and homerange size? Make a scatterplot to show this relationship. Be sure to include appropriate labels and a title.**
 ```{r}
-
+ggplot(data=homerange,
+       mapping=aes(x=mean.hra.m2, y=mean.mass.g))+
+  geom_point(mapping=aes(color=mean.hra.m2))+
+    scale_y_log10()+
+    scale_x_log10()+
+  geom_smooth(method=lm, se=T)+
+  labs(title="body mass (g) vs. homerange size (m^2)")
 ```
+
+
+Yes, there is a positive relationship between home range (in meters squared) and body mass (in grams)
 
 **9. Use filter to extract the data for only birds and mammals. Then make a plot that compares the homerange sizes of these two groups. Be sure to include appropriate labels and a title.**
 ```{r}
+mammals_and_birds <- filter(homerange, taxon=="mammals" | taxon=="birds")
+mammals_and_birds
 
+ggplot(data=mammals_and_birds,
+  mapping=aes(x=taxon, y=mean.hra.m2))+
+  geom_boxplot(mapping=aes(fill=taxon))+
+  scale_y_log10()+
+labs(title="homerange size (m^2) of mammals vs. birds")
 ```
+
 
 **10. Do one additional exploratory analysis of your choice. Before writing the code, write the question you are trying to answer. The question should be biologically meaningful and appropriate for the data. It must include at least one `filter()`, `select()`, and `arrange()`.**
-```{r}
 
+
+Which mammals have a homerange smaller than or equal to 30,000 m^2? Find the top 20 in ascending order and include common name, locomotion, homerange, and mass.
+
+```{r}
+homerange %>% 
+  select(trophic.guild, taxon, common.name, locomotion, mean.hra.m2, mean.mass.g) %>% 
+  filter(taxon=="mammals") %>% 
+  filter(trophic.guild=="carnivore") %>% 
+  filter(mean.hra.m2<=30000) %>% 
+  slice_min(mean.hra.m2, n=20) %>% 
+   arrange(mean.hra.m2)
 ```
+
 
 ## Knit and Upload
 Please knit your work as an .html file and upload to Canvas. Homework is due before the start of the next lab. No late work is accepted. Make sure to use the formatting conventions of RMarkdown to make your report neat and clean!  
