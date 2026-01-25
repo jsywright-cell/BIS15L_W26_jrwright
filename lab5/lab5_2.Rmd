@@ -37,6 +37,7 @@ filter(penguins, species=="Adelie")
 ```
 
 Similarly, if we are only interested in penguins with a body mass greater than or equal to 5500g we can use `filter()` to extract these observations.  
+
 ```{r}
 filter(penguins, body_mass_g>=5500)
 ```
@@ -154,7 +155,7 @@ penguins %>%
 penguins %>% 
   select(species, body_mass_g) %>% 
   filter(species=="Gentoo") %>% 
-  slice_min(nody_mass_g, n=1) #don't forget to specify the variable
+  slice_min(body_mass_g, n=1) #don't forget to specify the variable
 ```
 
 
