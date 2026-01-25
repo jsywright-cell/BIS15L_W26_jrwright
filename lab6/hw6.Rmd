@@ -115,16 +115,16 @@ There appears to be somewhat of a positive relationship between vegetation richn
 
 **9. Use `filter` to find all transects that have greater than 15 tree species or a breast height diameter between 50 and 60cm.  **
 ```{r}
-
+gabon_newest %>% 
+  filter(veg_rich>15 | between(veg_dbh, 50, 60))
 ```
 
-```{r}
-
-```
 
 **10.Which transects and land use types have more than 10 tree species and 10 mammal species? Use `arrange()` to sort by the number of tree species.**
 ```{r}
-
+gabon_newest %>% 
+  filter(veg_rich>10, rich_mammal_species>10) %>% 
+  arrange(desc(veg_rich))
 ```
 
 ## Knit and Upload
