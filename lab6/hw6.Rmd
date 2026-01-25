@@ -63,8 +63,12 @@ gabon_newest %>%
 gabon_newest %>% 
   select(veg_rich, land_use) %>% 
   ggplot(mapping=aes(x=land_use, y=veg_rich))+
-  geom_boxplot(mapping=aes(fill=land_use))
+  geom_boxplot(mapping=aes(fill=land_use))+
+  labs(title="vegetation richness vs. land use type")
 ```
+
+
+National parks have the highest median vegetation richness, while certain logging concessions have higher vegetation richness overall. Neither has the lowest vegetation richness.
 
 
 **7. For which land use type (national parks, logging, or neither) is average all species diversity the greatest?**
@@ -100,13 +104,15 @@ gabon_neither <- gabon_newest %>%
 The average all species diversity is highest for national parks.
 
 
+
 **8. Is there a relationship between vegetation richness and mammal species richness?**
 ```{r}
 gabon_newest %>% 
   select(veg_rich, rich_mammal_species) %>% 
   ggplot(mapping=aes(x=veg_rich, y=rich_mammal_species))+
   geom_point(mapping=aes(color=veg_rich))+
-  geom_smooth(method=lm, se=T)
+  geom_smooth(method=lm, se=T)+
+  labs(title="mammal species richness vs. vegetation richness")
 ```
 
 
