@@ -9,7 +9,44 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-Rules:  
+**Rules:**
 + `filter(condition1, condition2)` will return rows where both conditions are met. By default the , means &.    
 + `filter(condition1, !condition2)` will return all rows where condition one is true but condition 2 is not.  
-+ `filter(condition1 | condition2)` will return rows where condition 1 or condition 2 is met.  
++ `filter(condition1 | condition2)` will return rows where condition 1 or condition 2 is met. 
+
+**Graphs:**
+bar: `geom_bar`
+box: `geom_boxplot`
+dot plot: `geom_point`
+  line of best fit: `geom_smooth(method=lm)`
+  standard error: `geom_smooth(method=lm, se=T)`
+bar(x&y): `geom_col`
+
+**Cleaning Data:**
+
+`clean_names` converts all column names to typical R conventions
+  + does not change data itself
+`mutate(across(c(data_columns), tolower))` will change specific data to lowercase
+`mutate(across(where(is.character), tolower))` will change all to lowercase without changing all data to chr
+`mutate(across(c(data_columns), as.factor))` will change specific data to factors
+
+**Misc Commands:**
+
+`distinct()` looks for all unique observations in rows.(6_1)
+  distinct(): across all rows
+  distinct(data_column): distinct data in column
+  distinct(data_column, data_column, .keep_all=T): will allow to see all of data on each distinct    data of first column
+  
+`mutate()` creates new columns from existing columns in a data frame.(6_1)
+
+`mutate()` & `across()` apply a function to multiple columns.(6_1)
+  mutate(across(ends_with("mm"), ~./10))
+      `~` indicates that what follows is a formula (lambda function).
+      `.` represents the current column being processed 
+      `./10` means "take the current column and divide it by 10". This operation is applied to           all columns that end with `mm`.
+      
+
+        
+
+
+

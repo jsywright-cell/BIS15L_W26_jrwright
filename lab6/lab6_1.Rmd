@@ -90,7 +90,7 @@ penguins %>%
 What if we want to know which islands each species occurs on?
 ```{r}
 penguins %>% 
-  distinct(species, island,.keep_all=T)
+  distinct(species, island, .keep_all=T)
 ```
 
 ## `mutate()`
