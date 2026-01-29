@@ -10,25 +10,27 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 **Rules:**
-+ `filter(condition1, condition2)` will return rows where both conditions are met. By default the , means &.    
-+ `filter(condition1, !condition2)` will return all rows where condition one is true but condition 2 is not.  
++ `filter(condition1, condition2)` will return rows where both conditions are met. By default the ,   means &.    
++ `filter(condition1, !condition2)` will return all rows where condition one is true but condition   2 is not.  
 + `filter(condition1 | condition2)` will return rows where condition 1 or condition 2 is met. 
 
 **Graphs:**
-bar: `geom_bar`
-box: `geom_boxplot`
-dot plot: `geom_point`
-  line of best fit: `geom_smooth(method=lm)`
-  standard error: `geom_smooth(method=lm, se=T)`
-bar(x&y): `geom_col`
+bar: `geom_bar()`
+box: `geom_boxplot()`
+dot plot: `geom_point()`
+  + line of best fit: `geom_smooth(method=lm)`
+  + standard error: `geom_smooth(method=lm, se=T)`
+  + scale_y_log10()+
+  + scale_x_log10()+
+bar(x&y): `geom_col()`
 
 **Cleaning Data:**
 
-`clean_names` converts all column names to typical R conventions
+`clean_names` converts all column names to typical R conventions(6_1)
   + does not change data itself
-`mutate(across(c(data_columns), tolower))` will change specific data to lowercase
-`mutate(across(where(is.character), tolower))` will change all to lowercase without changing all data to chr
-`mutate(across(c(data_columns), as.factor))` will change specific data to factors
+`mutate(across(c(data_columns), tolower))` will change specific data to lowercase(6_1)
+`mutate(across(where(is.character), tolower))` will change all to lowercase without changing all data to chr(6_1)
+`mutate(across(c(data_columns), as.factor))` will change specific data to factors(hw6)
 
 **Misc Commands:**
 
@@ -45,7 +47,19 @@ bar(x&y): `geom_col`
       `.` represents the current column being processed 
       `./10` means "take the current column and divide it by 10". This operation is applied to           all columns that end with `mm`.
       
+`if.else()` allows use of `mutate()` but doesn't mess with the whole column, usually for converting -999 to NA (6_1)
 
+`relocate()` allows you to move columns to different locations within a data frame(5_1)
+
+`select()`(5_1)
+
+`filter()` to extract data that meets a certain criteria within a row(5_2)
+  + can use operators > < == and !
+  + `%in%` determines whether or not a value is part of a vector
+  + `near` extracts data close to a certain value, but must specify tolerance (split evenly above    and below value)
+  
+  
+  
         
 
 
