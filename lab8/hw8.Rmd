@@ -109,7 +109,12 @@ The "Russian Federation" had the highest catch of Alaskan Pollock (or Walleye Po
 9. How has fishing of this species changed over the last decade (2013-2023)? Create a  plot showing total catch by year for this species.
 ```{r}
 fisheries_clean %>% 
-  filter()
+  filter(period>="2013", common_name=="Alaska pollock(=Walleye poll.)") %>% 
+  group_by(period) %>% 
+  summarize(total_Alaska_pollock=sum(catch, na.rm=T)) %>% 
+  ggplot(mapping=aes(x=period))+ 
+  geom_bar(mapping=aes(color=period))
+  
 ```
 
 10. Perform one exploratory analysis of your choice. Make sure to clearly state the question you are asking before writing any code.
