@@ -97,8 +97,11 @@ NEI stands for "Not Elsewhere Included," meaning that they have not been identif
 8. For the species that was caught the most above (not NEI), which country had the highest catch in 2023?
 ```{r}
 fisheries_clean %>% 
-  filter(common_name=="Alaska pollock(=Walleye poll.") %>% 
-  group_by()
+  filter(common_name=="Alaska pollock(=Walleye poll.)", period=="2023") %>% 
+  group_by(country) %>% 
+  arrange(desc(catch)) %>% 
+  slice_head(n=5)
+
 ```
 
 9. How has fishing of this species changed over the last decade (2013-2023)? Create a  plot showing total catch by year for this species.
