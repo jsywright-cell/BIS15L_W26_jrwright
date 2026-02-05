@@ -112,15 +112,27 @@ fisheries_clean %>%
   filter(period>="2013", common_name=="Alaska pollock(=Walleye poll.)") %>% 
   group_by(period) %>% 
   summarize(total_Alaska_pollock=sum(catch, na.rm=T)) %>% 
-  ggplot(mapping=aes(x=period))+ 
-  geom_bar(mapping=aes(color=period))
+  ggplot(mapping=aes(x=period, y=total_Alaska_pollock))+
+  geom_col(mapping=aes(fill=period))+
+  labs(title="Alaska Pollock catch over 2013-2023")
   
 ```
 
-10. Perform one exploratory analysis of your choice. Make sure to clearly state the question you are asking before writing any code.
-```{r}
+It hasn't changed by much, increasing slightly over the years.
 
+10. Perform one exploratory analysis of your choice. Make sure to clearly state the question you are asking before writing any code.
+
+Which year had the highest catch of Silver scabbardfish?
+
+```{r}
+fisheries_clean %>% 
+  group_by(period) %>% 
+  summarize(total_silver_scabbardfish=sum(catch, na.rm=T)) %>% 
+  arrange(desc(total_silver_scabbardfish)) %>% 
+  slice_head(n=10)
 ```
+
+The year with the highest catch of Silver scabbardfish was 2018.
 
 ## Knit and Upload
 Please knit your work as an .html file and upload to Canvas. Homework is due before the start of the next lab. No late work is accepted. Make sure to use the formatting conventions of RMarkdown to make your report neat and clean!  
