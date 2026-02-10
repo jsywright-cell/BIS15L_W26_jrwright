@@ -49,42 +49,55 @@ sydneybeaches_long <- sydneybeaches %>%
 4. Pivot the data such that the dates are column names and each beach only appears once (wide format). Name the object `sydneybeaches_wide`
 ```{r}
 sydneybeaches_wide <- sydneybeaches %>% 
-  pivot_wider(names_from = "Site",
-              values_from = "Date")
-
-sydneybeaches_wide
+  pivot_wider(names_from = "Date",
+              values_from = "Enterococci (cfu/100ml)")
 ```
 
 5. Pivot the data back so that the dates are data and not column names.
 ```{r}
 sydneybeaches_wide %>% 
-  pivot_longer(-c(BeachId, Region, Council, Longitude, Latitude, `Enterococci (cfu/100ml)`),
-               names_to = "Site",
-               values_to = "Date")
+  pivot_longer(-c(BeachId, Region, Council, Site, Longitude, Latitude),
+               names_to = "Date",
+               values_to = "Enterococci (cfu/100ml)")
 ```
 
 6. We haven't dealt much with dates yet, but separate the date into columns day, month, and year. Do this on the `sydneybeaches_long` data.
 ```{r}
+sydneybeaches_long <- sydneybeaches_long %>%
+  separate(Date, into = c("day", "month", "year"), sep = "/")
 
+sydneybeaches_long
 ```
 
 7. What is the average `enterococci_cfu_100ml` by year for each beach. Think about which data you will use- long or wide.
 ```{r}
+enterococci_cfu_100ml_by_year_long <- sydneybeaches_long %>% 
+  group_by(year, Site) %>% 
+  summarize(mean_enterococci_cfu_100ml=mean(`Enterococci (cfu/100ml)`, na.rm=T))
 
+enterococci_cfu_100ml_by_year_long
 ```
 
 8. Make the output from question 7 easier to read by pivoting it to wide format.
 ```{r}
-
+enterococci_cfu_100ml_by_year_wide <- enterococci_cfu_100ml_by_year_long %>% 
+  pivot_wider(names_from = year,
+              values_from = mean_enterococci_cfu_100ml)
+enterococci_cfu_100ml_by_year_wide
 ```
 
 9. What was the most polluted beach in 2013?
 ```{r}
+enterococci_cfu_100ml_by_year_long_2013 <- enterococci_cfu_100ml_by_year_long %>% 
+  filter(year=="2013") %>% 
+  group_by(mean_enterococci_cfu_100ml, Site) %>% 
+  arrange(desc(mean_enterococci_cfu_100ml))
 
 ```
 
 ```{r}
-
+enterococci_cfu_100ml_by_year_long_2013 %>% 
+  slice_tail(n=5)
 ```
 
 10. Explore the data! Do one analysis of your choice that includes a minimum of three lines of code.  

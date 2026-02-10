@@ -177,6 +177,7 @@ qpcr_tidy <- qpcr_untidy %>%
     names_sep = "_",
     values_to ="mRNA expression"
   )
+qpcr_tidy
 ```
 
 
