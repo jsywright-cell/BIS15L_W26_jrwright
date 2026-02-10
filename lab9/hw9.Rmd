@@ -90,9 +90,7 @@ enterococci_cfu_100ml_by_year_wide
 ```{r}
 enterococci_cfu_100ml_by_year_long %>% 
   filter(year=="2013") %>% 
-  group_by(mean_enterococci_cfu_100ml, Site) %>% 
   arrange(desc(mean_enterococci_cfu_100ml))
-
 ```
 
 The most polluted beach in 2013 was Little Bay Beach.
