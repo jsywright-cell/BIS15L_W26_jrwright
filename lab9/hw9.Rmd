@@ -88,22 +88,28 @@ enterococci_cfu_100ml_by_year_wide
 
 9. What was the most polluted beach in 2013?
 ```{r}
-enterococci_cfu_100ml_by_year_long_2013 <- enterococci_cfu_100ml_by_year_long %>% 
+enterococci_cfu_100ml_by_year_long %>% 
   filter(year=="2013") %>% 
   group_by(mean_enterococci_cfu_100ml, Site) %>% 
   arrange(desc(mean_enterococci_cfu_100ml))
 
 ```
 
+The most polluted beach in 2013 was Little Bay Beach.
+
+10. Explore the data! Do one analysis of your choice that includes a minimum of three lines of code. 
+
+What year was the overall average number of 'Enterococci (cfu/100ml)' highest?
+
 ```{r}
-enterococci_cfu_100ml_by_year_long_2013 %>% 
-  slice_tail(n=5)
+sydneybeaches_long %>% 
+  group_by(year) %>% 
+  summarise(overall_yearly_avg=mean(`Enterococci (cfu/100ml)`, na.rm=T)) %>% 
+  arrange(desc(overall_yearly_avg)) %>% 
+  slice_head(n=6)
 ```
 
-10. Explore the data! Do one analysis of your choice that includes a minimum of three lines of code.  
-```{r}
-
-```
+Overall yearly pollution average of all beaches was highest in 2013.
 
 ## Knit and Upload
 Please knit your work as an .html file and upload to Canvas. Homework is due before the start of the next lab. No late work is accepted. Make sure to use the formatting conventions of RMarkdown to make your report neat and clean!  
