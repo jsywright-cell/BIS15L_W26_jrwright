@@ -59,8 +59,8 @@ sydneybeaches_wide
 ```{r}
 sydneybeaches_wide %>% 
   pivot_longer(-c(BeachId, Region, Council, Longitude, Latitude, `Enterococci (cfu/100ml)`),
-               names_to = "Date",
-               values_to = "Site")
+               names_to = "Site",
+               values_to = "Date")
 ```
 
 6. We haven't dealt much with dates yet, but separate the date into columns day, month, and year. Do this on the `sydneybeaches_long` data.
