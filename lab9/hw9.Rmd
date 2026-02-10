@@ -49,15 +49,18 @@ sydneybeaches_long <- sydneybeaches %>%
 4. Pivot the data such that the dates are column names and each beach only appears once (wide format). Name the object `sydneybeaches_wide`
 ```{r}
 sydneybeaches_wide <- sydneybeaches %>% 
-  pivot_wider(names_from = "Date",
-              values_from = "Site")
+  pivot_wider(names_from = "Site",
+              values_from = "Date")
 
 sydneybeaches_wide
 ```
 
 5. Pivot the data back so that the dates are data and not column names.
 ```{r}
-
+sydneybeaches_wide %>% 
+  pivot_longer(-c(BeachId, Region, Council, Longitude, Latitude, `Enterococci (cfu/100ml)`),
+               names_to = "Date",
+               values_to = "Site")
 ```
 
 6. We haven't dealt much with dates yet, but separate the date into columns day, month, and year. Do this on the `sydneybeaches_long` data.
