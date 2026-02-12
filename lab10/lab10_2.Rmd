@@ -58,11 +58,11 @@ p+geom_point(mapping=aes(shape=thermoregulation, color=thermoregulation), size=2
 
 What about just filling in with a color preference or size?
 ```{r}
-p+geom_point(size=3, color="black", alpha=0.8, shape=24, fill="blue")
+p+geom_point(size=3, color="black", alpha=1, shape=6, fill="lemonchiffon4")
 ```
 
 ```{r}
-
+colors()
 ```
 
 ```{r}
@@ -168,7 +168,7 @@ In addition to `fill`, `group` is an aesthetic that accomplishes the same functi
 Here is a box plot that shows `log10.mass` by taxonomic `class.`
 ```{r}
 homerange %>% 
-  ggplot(aes(x=class, y=log10_mass, group=taxon))+
+  ggplot(aes(x=class, y=log10_mass))+
   geom_boxplot()
 ```
 
@@ -181,7 +181,9 @@ homerange %>%
 
 I can also use `fill` to associate the different taxa with a color coded key.
 ```{r}
-
+homerange %>% 
+  ggplot(aes(x=class, y=log10_mass, fill=taxon))+
+  geom_boxplot()
 ```
 
 ## Wrap-up  
