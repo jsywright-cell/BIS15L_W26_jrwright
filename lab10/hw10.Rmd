@@ -78,15 +78,22 @@ sharks_wide <- sharks %>%
   group_by(county) %>% 
   count(injury) %>% 
   pivot_wider(names_from = injury,
-              values_from = n)
+              values_from = n) %>% 
+  mutate(total_incidents=sum(minor, none, major, `major*`, `none*`, fatal, `minor*`, na.rm=T))
+
 sharks_wide
 ```
+
+San Diego has the highest number of incidents
 
 6. Use the table from #5 to make a plot that shows the total number of incidents by county.
 ```{r}
 sharks_wide %>% 
-  ggplot(aes(x=county))+
-  geom_bar(position = "dodge")
+  group_by(county) %>% 
+  ggplot(aes(x=county, y=total_incidents, fill=county))+
+  geom_col()+
+  theme(axis.text.x = element_text(angle = 60, hjust = 0.85))+
+  labs(title="Number of Incidents by County")
 ```
 
 7. In the data, `mode` refers to a type of activity. Which activity is associated with the highest number of incidents?
