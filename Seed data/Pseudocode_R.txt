@@ -1,0 +1,70 @@
+# Seed disinfestation practices to control seed-borne fungi and bacteria in home production of sprouts  
+
+Gregory S. Gilbert, Alyssa Diaz, and Haylee A. Bregoff
+
+---
+### R pseudocode used for analyses associated with Tables and figures in 
+### Gilbert, G.S., A. Diaz, and H.A. Bregoff. 2023. Seed disinfestation practices to control seed-borne fungi and bacteria in home production of sprouts. Foods 12:747 www.mdpi.com/2304-8158/12/4/747
+
+### Analysis associated with Table 3 Gilbert_2023_onion_data_chem_heat_Table3
+Analysis compared mean response of each treatment based on analysis of variance and Dunnett's test to compare each treatment to the control (sdH2O Agitated).   Means of each treatment were compared in a paired Wilcoxon test to compare the overall effect of Sonication vs. Agitation.  
+
+For instance: 
+a<-read.csv("Gilbert_2023_onion_data_chem_heat_Table3.csv")
+a$CombTreatment<-paste(a$Agent,a$Sonication,sep="_")
+model<-aov(FungalGrowth_day3_percent~CombTreatment,data=a)
+summary(model)
+DunnettTest(a$FungalGrowth_day3_percent,a$CombTreatment,control="sdH2O_agitation")
+
+For Wilcoxon test of impact of sonication on fungal growth
+outfun<-aggregate(a$FungalGrowth_day3_percent, by=list(a$Sonication,a$Treatments),FUN=mean)
+colnames(outfun)<-c("sonication","treatment","fungal_perc") 
+outfun<-outfun[outfun$treatment!="Boiling",]
+outfunpaired<-as.data.frame(cast(outfun,treatment~sonication,value="fungal_perc"))
+wilcox.test(outfunpaired$agitation,outfunpaired$sonication,paired=TRUE)
+
+
+### Analysis associated with Figures 2, 3, 4, in Gilbert_2023_ResponseSurface_Composite_Sterilization_Germ_CFU
+
+
+Response surfaces were fit by calculating the mean response for each concentration / time combination.  For instance:
+bleachmean<-aggregate(bleach$CFU_200seeds,by=list(bleach$Percent,bleach$Minutes),FUN=mean)
+colnames(bleachmean)<-c("Percent","Minutes","CFU_200seeds")
+bleachmean$log10CFU<-log10(bleachmean$CFU_200seeds+10)
+bleachgermmean<-aggregate(bleach$Germ_Perc,by=list(bleach$Percent,bleach$Minutes),FUN=mean)
+bleachmean$Germ_Perc<-bleachgermmean$x
+bleachmean$Treatment<-"Bleach"
+
+and then response surface created using function:
+CFUrs<-function(df){
+#set dimensions of axes
+axx <- list(nticks = 8,range = c(0,max(df$Percent))) #concentration axis
+axy <- list(nticks = 8,range = c(1,max(df$Minutes))) #time axis
+axz <- list(nticks = 8,range = c(0,ceiling(max(df$log10CFU)))) #response axis
+
+plot4 <- plot_ly(
+  data=df, x=~Percent ,y=~Minutes, z=~log10CFU,
+  type='mesh3d', intensity = ~log10CFU,
+  colors=colorRamp(rainbow(5)))
+plot4 <- plot4 %>% layout(scene = list(xaxis=axx,yaxis=axy,zaxis=axz))
+plot4
+}
+
+Extracted data for the best5 treatments were then visualized as box plots, and means compared using analysis of variance and TukeyHSD test.  For instance:
+    plot(best5$log10CFU~best5$Treatment,
+     xlab="Treatment",ylab=expression(log[10]~"Bacterial CFU"),
+     las=1)
+    cfuaov<-aov(best5$log10CFU~best5$Treatment)
+    summary(cfuaov)
+    TukeyHSD(cfuaov)
+
+### Analysis associated with Figures 5 and 6 in Gilbert_2023_Sterilants_HeadToHead
+
+Analysis conducted separately for 5-min and 15-min experiments, treating each repetition of experiment as a temporal plock. Analysis of variance with experiment as a block; Tukey's HSD means comparisons; calculation of least squares means and standard error of means estimates.  
+
+For example: for Bacterial load on 5-min treatment (including only experiments 1 & 3)
+lm_bact_05<-aov(log10(CFU_200seeds_bact+10)~Experiment + Treatment)
+summary(lm_bact_05)
+anova(lm_bact_05)
+TukeyHSD(lm_bact_05,which = "Treatment")
+lsm_bact_05<-as.data.frame(emmeans(lm_bact_05,specs=c('Treatment')))
