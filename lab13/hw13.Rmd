@@ -59,6 +59,11 @@ amniota %>%
   summary()
 ```
 
+```{r}
+amniota <- amniota %>% 
+  replace_with_na_all(condition=~.x %in% c(common_na_numbers, common_na_strings))
+```
+
 
 5. Use `naniar` to visualize the number of NA's in each variable. Which variables have the most NA's?
 
@@ -67,7 +72,17 @@ amniota %>%
   gg_miss_var()
 ```
 
+Subspecies and female body mass at maturity have the most NAs - in fact, they are all NAs.
+
 6. Calculate the number of NAs in the `egg_mass_g` column sorted by taxonomic class; i.e. how many NA's are present in the `egg_mass_g` column in birds, mammals, and reptiles? Does this results make sense biologically? How do these results affect your interpretation of NA's?
+
+```{r}
+amniota %>% 
+  group_by(class) %>% 
+  summarise(n_na_egg_mass_g=sum(is.na(egg_mass_g)))
+```
+
+The very large number of missing egg masses makes sense for mammals, as there are only 5 monotremes on earth, but not so much for Aves and Reptilia. The large number of NAs could indicate that any conclusions based on data analysis may be inaccurate because of a lot of missing data. NAs can help determine if a dataset really encompasses all it appears to.
 
 ## Knit and Upload
 Please knit your work as an .html file and upload to Canvas. Homework is due before the start of the next lab. No late work is accepted. Make sure to use the formatting conventions of RMarkdown to make your report neat and clean! 
