@@ -58,6 +58,32 @@ bar(x&y): `geom_col()`
   + `%in%` determines whether or not a value is part of a vector
   + `near` extracts data close to a certain value, but must specify tolerance (split evenly above    and below value)
   
+  **Colors/Aesthetics**
+  lab 10 - aesthetics with plots
+  lab 11 - colors & density plots
+  
+  **NAs**
+  `summarise(across(everything(), ~sum(is.na(.))))` to count NAs in each column
+  `summarise(across(everything(), ~sum(.==-999)))` to count -999s in each column
+  
+  `life_history_no_nas <- read_csv("data/mammal_lifehistories_v3.csv", na="-999") %>% 
+  clean_names()` example of how to read in data and convert -999 to NA's
+  
+  `miss_var_summary` provides a summary of NA's across the data frame
+  `gg_miss_var` to visualize the number of NA's in each variable
+  
+  `replace_with_na_all(condition=~.x %in% c(common_na_numbers, common_na_strings))`
+  
+  
+  **Shiny**
+  lab 14_2
+  
+  **Maps**
+  lab 14_1
+  
+  
+  
+  
   
   
         

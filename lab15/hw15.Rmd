@@ -73,10 +73,10 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-2. In addition to the .Rmd file, save your app as a standalone R script called `elephants.csv`.
+2. In addition to the .Rmd file, save the app above as a standalone R script called `elephants.csv`.
 
 ```{r}
-elephants.csv <- write.csv(shiny::runApp("elephants_app.R"))
+elephants_app.R
 ```
 
 ## Knit and Upload
