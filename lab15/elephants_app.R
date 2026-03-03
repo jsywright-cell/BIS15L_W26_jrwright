@@ -44,3 +44,13 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
+
+#ui +
+#  output$downloadData <- downloadHandler(
+#      filename = function() {
+#        paste("elephants-", Sys.Date(), ".csv", sep="")
+#      },
+#      content = function(file) {
+#        write.csv(elephants, file)
+#      }
+#    )

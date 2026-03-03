@@ -76,7 +76,7 @@ shinyApp(ui, server)
 2. In addition to the .Rmd file, save the app above as a standalone R script called `elephants.csv`.
 
 ```{r}
-elephants_app.R
+
 ```
 
 ## Knit and Upload
