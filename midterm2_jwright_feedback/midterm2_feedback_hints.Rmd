@@ -1,0 +1,95 @@
+---
+title: "Midterm 2 Feedback Hints"
+output:
+  html_document:
+    theme: spacelab
+    toc: no
+---
+
+# Midterm 2 Feedback Hints
+
+This feedback is organized by question and points back to your submission with line references from `midterm2.Rmd`.
+
+## Question 1
+
+**What you did well:** You listed the variable names and used `summary()` to inspect the dataset structure. That addresses the core goal of the question well.
+
+**How to improve:** This was acceptable as written. A structure-focused function such as `glimpse()` can sometimes make data types easier to scan, but your approach still shows the variables and gives a useful overview.
+
+**Line references:** See lines 76-80.
+
+## Question 2
+
+**What you did well:** You identified `unknown` as an alternative missing-value label, used `replace_with_na()`, and included both a summary and a `naniar` visualization.
+
+**How to improve:** Your overall approach is solid. The main thing to tighten is the explanation of where the alternative missing values occur. It also helps to separate the cleaning step from the reporting step so the workflow is easier to follow.
+
+**Line references:** See lines 85-99. Your commented exploration on lines 86-87 shows the right instinct to check how missing values were encoded.
+
+## Question 3
+
+**What you did well:** You made a plot by population and gave a short interpretation of the pattern you saw. Your conclusion about SB having more sampled females is useful.
+
+**How to improve:** The prompt asked for both a count table and a plot. Your plot is a reasonable start, but the explicit count output is missing. Adding axis labels would also make the figure more complete for grading and for readers.
+
+**Line references:** The plot appears on lines 104-110, and your written interpretation is on line 112.
+
+## Question 4
+
+**What you did well:** You recognized that `capture_date` needed to be split to get the year, which is the key first step.
+
+**How to improve:** This question is incomplete. You separated the date into year, month, and day, but the plotting attempts are commented out, so no final count or line plot is produced. The prompt specifically asked for the number of bears sampled in each year for both populations and a line plot to visualize that pattern.
+
+**Line references:** The date separation is on lines 116-119. The attempted plots remain commented out on lines 121-142.
+
+## Question 5
+
+**What you did well:** You calculated the requested summary statistics for both `urea_nitrogen` and `creatinine`.
+
+**How to improve:** This answer is acceptable. A small improvement would be to present both variables in one summary block so the results are easier to compare side by side.
+
+**Line references:** See lines 146-160.
+
+## Question 6
+
+**What you did well:** You created `un_creat_ratio` using the correct formula.
+
+**How to improve:** This is correct as written.
+
+**Line references:** See lines 164-167.
+
+## Question 7
+
+**What you did well:** You used `case_when()` correctly and created the `fasting` variable based on the threshold in the prompt.
+
+**How to improve:** Your logic is correct. One small improvement would be to use more descriptive labels than `"T"` and `"F"` so later plots and summaries are easier to interpret.
+
+**Line references:** See lines 171-175.
+
+## Question 8
+
+**What you did well:** You filtered to fasting bears and created a population-by-year visualization. The faceting helps separate the two populations.
+
+**How to improve:** Your approach is acceptable but improvable. A line plot would match the wording of the prompt better and would make the increase/decrease trend easier to see across years. Since you already had `year`, this was a good place to summarize counts first and then plot them.
+
+**Line references:** See lines 179-187.
+
+## Question 9
+
+**What you did well:** You calculated a bounding box, retrieved a static map, and plotted the bear locations. That shows good progress on the mapping workflow.
+
+**How to improve:** The main missing piece is population-specific coloring. The prompt asked for locations by population, but your `geom_point()` uses a single fixed color instead of mapping color to `popn`. That means the map does not distinguish the two groups visually.
+
+**Line references:** The map setup is on lines 197-204, and the plotting choice appears on lines 206-208.
+
+## Question 10
+
+**What you did well:** You set up a UI control with the requested variable choices and kept the chunk non-evaluated so the document could still knit.
+
+**How to improve:** This question is incomplete. The app code is fully commented out, so it does not demonstrate a working app. The plotting code also needs revision: the goal was to show the range of `un_creat_ratio` values for both populations, so a range-oriented plot such as a boxplot is a better fit than a column chart.
+
+**Line references:** The attempted app structure is on lines 212-243. The key incomplete detail is that everything remains commented out in that block.
+
+## Next Steps
+
+Your strongest work was on Questions 1, 5, 6, and 7. The biggest score gains would likely come from finishing Question 4, revising Question 9 to map color to population, and turning Question 10 into a runnable app structure.

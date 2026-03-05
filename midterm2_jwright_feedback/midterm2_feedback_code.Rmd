@@ -1,0 +1,257 @@
+---
+title: "Midterm 2 Feedback Code"
+output:
+  html_document:
+    theme: spacelab
+    toc: no
+---
+
+```{r setup, message=FALSE, warning=FALSE}
+library(tidyverse)
+library(janitor)
+library(naniar)
+library(ggmap)
+library(lubridate)
+library(shiny)
+
+polar_bears_feedback <-
+  read_csv("data/polarBear_serumUreaCreatinine_beaufortChukchi_rode.csv") %>%
+  clean_names() %>%
+  select(-den_method, -no_cubs, -cub_age) %>%
+  filter(age_class %in% c("A", "S")) %>%
+  mutate(
+    sex = toupper(sex),
+    age_class = toupper(age_class)
+  ) %>%
+  replace_with_na(replace = list(
+    mating = "unknown",
+    denning = "unknown"
+  )) %>%
+  mutate(
+    capture_date = ymd(capture_date),
+    year = year(capture_date),
+    un_creat_ratio = (0.466 * urea_nitrogen) / creatinine,
+    fasting = case_when(
+      un_creat_ratio <= 10 ~ "fasting",
+      un_creat_ratio > 10 ~ "not fasting"
+    )
+  )
+```
+
+# Midterm 2 Feedback Code
+
+This file gives short examples of how to strengthen each question without rewriting your full submission. Line references point back to `midterm2.Rmd`.
+
+## Question 1
+
+**What you did well:** You inspected the dataset with `names()` and `summary()`, which meets the main goal of the prompt.
+
+**Improvement idea:** If you want a more compact structure check, `glimpse()` is often easier to read for large tibbles.
+
+**Line references:** See lines 76-80.
+
+```{r}
+glimpse(polar_bears_feedback)
+```
+
+## Question 2
+
+**What you did well:** You correctly identified `unknown` as an alternative NA label and used `naniar` tools to explore missingness.
+
+**Improvement idea:** Keep the replacement step and the reporting step clearly separated so the workflow is easier to debug and explain.
+
+**Line references:** See lines 85-99.
+
+```{r}
+polar_bears_feedback %>%
+  miss_var_summary()
+
+polar_bears_feedback %>%
+  gg_miss_var()
+```
+
+## Question 3
+
+**What you did well:** Your plot separates the populations and your interpretation on line 112 identifies the main pattern.
+
+**Improvement idea:** Add the missing count table, then let the plot summarize the same result visually.
+
+**Line references:** See lines 104-112.
+
+```{r}
+polar_bears_feedback %>%
+  count(popn, sex)
+
+polar_bears_feedback %>%
+  count(popn, sex) %>%
+  ggplot(aes(x = popn, y = n, fill = sex)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Bears Sampled by Population and Sex",
+    x = "Population",
+    y = "Count"
+  )
+```
+
+## Question 4
+
+**What you did well:** You recognized that extracting year from `capture_date` was necessary.
+
+**Improvement idea:** This question needs a completed count step and a final line plot. Your commented code on lines 121-142 shows the right direction, but it needs to be finished and run.
+
+**Line references:** See lines 116-142.
+
+```{r}
+polar_bears_feedback %>%
+  count(year, popn) %>%
+  ggplot(aes(x = year, y = n, color = popn)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Bears Sampled Each Year by Population",
+    x = "Year",
+    y = "Count",
+    color = "Population"
+  )
+```
+
+## Question 5
+
+**What you did well:** You found the requested statistics for both variables.
+
+**Improvement idea:** A combined summary makes comparison easier.
+
+**Line references:** See lines 146-160.
+
+```{r}
+polar_bears_feedback %>%
+  summarise(
+    min_urea = min(urea_nitrogen, na.rm = TRUE),
+    median_urea = median(urea_nitrogen, na.rm = TRUE),
+    mean_urea = mean(urea_nitrogen, na.rm = TRUE),
+    max_urea = max(urea_nitrogen, na.rm = TRUE),
+    min_creatinine = min(creatinine, na.rm = TRUE),
+    median_creatinine = median(creatinine, na.rm = TRUE),
+    mean_creatinine = mean(creatinine, na.rm = TRUE),
+    max_creatinine = max(creatinine, na.rm = TRUE)
+  )
+```
+
+## Question 6
+
+**What you did well:** The ratio formula in your answer is correct.
+
+**Improvement idea:** No major changes needed here.
+
+**Line references:** See lines 164-167.
+
+```{r}
+polar_bears_feedback %>%
+  select(urea_nitrogen, creatinine, un_creat_ratio) %>%
+  slice_head(n = 5)
+```
+
+## Question 7
+
+**What you did well:** You used `case_when()` correctly and matched the threshold rule.
+
+**Improvement idea:** More descriptive labels make later plots easier to interpret.
+
+**Line references:** See lines 171-175.
+
+```{r}
+polar_bears_feedback %>%
+  count(fasting)
+```
+
+## Question 8
+
+**What you did well:** You filtered to fasting bears and made a population-based display.
+
+**Improvement idea:** A line plot is usually the clearest way to show an increase or decrease over time.
+
+**Line references:** See lines 179-187.
+
+```{r}
+polar_bears_feedback %>%
+  filter(fasting == "fasting") %>%
+  count(year, popn) %>%
+  ggplot(aes(x = year, y = n, color = popn)) +
+  geom_line() +
+  geom_point() +
+  labs(
+    title = "Fasting Bears by Year and Population",
+    x = "Year",
+    y = "Count",
+    color = "Population"
+  )
+```
+
+## Question 9
+
+**What you did well:** You successfully set up the bounding box and used a static map background.
+
+**Improvement idea:** The key fix is mapping point color to `popn` instead of using one fixed color for every bear.
+
+**Line references:** See lines 197-208.
+
+```{r, eval=FALSE}
+lat <- c(62.46, 72.70)
+long <- c(-173.1, -134.8)
+bbox <- make_bbox(long, lat, f = 0.10)
+map1 <- get_stadiamap(bbox, maptype = "stamen_terrain", zoom = 6)
+
+ggmap(map1) +
+  geom_point(
+    data = polar_bears_feedback,
+    aes(x = long, y = lat, color = popn),
+    size = 1.5,
+    alpha = 0.8
+  ) +
+  labs(
+    title = "Polar Bear Distribution by Population",
+    x = "Longitude",
+    y = "Latitude",
+    color = "Population"
+  )
+```
+
+## Question 10
+
+**What you did well:** You identified the needed input choices and kept the chunk non-evaluated so the document could still knit.
+
+**Improvement idea:** This question is incomplete as submitted. A concise working pattern is to let the user choose the fill variable and use a boxplot to show the range of `un_creat_ratio` for each population.
+
+**Line references:** See lines 212-243.
+
+```{r, eval=FALSE}
+ui <- fluidPage(
+  selectInput(
+    "fill_var",
+    "Select Fill Variable",
+    choices = c("sex", "mating", "age_class", "denning", "fasting"),
+    selected = "sex"
+  ),
+  plotOutput("plot", width = "600px", height = "500px")
+)
+
+server <- function(input, output, session) {
+  output$plot <- renderPlot({
+    polar_bears_feedback %>%
+      ggplot(aes(x = popn, y = un_creat_ratio, fill = .data[[input$fill_var]])) +
+      geom_boxplot() +
+      labs(
+        title = "Range of Urea Nitrogen to Creatinine Ratio",
+        x = "Population",
+        y = "UN:Creatinine Ratio",
+        fill = "Selected Variable"
+      )
+  })
+}
+
+shinyApp(ui, server)
+```
+
+## Next Steps
+
+Your clearest wins came on Questions 1, 5, 6, and 7. To raise this submission most efficiently, focus first on finishing Question 4, revising Question 9 so the map distinguishes populations, and converting Question 10 from a draft into a working app structure.
