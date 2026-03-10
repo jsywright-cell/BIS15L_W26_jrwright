@@ -32,10 +32,17 @@ library(janitor)
 library(dplyr)
 library(readr)
 library(Biostrings)
+
+library(paletteer)
+library(RColorBrewer)
 ``` 
 
 ```{r}
 options(scipen = 999)
+```
+
+```{r}
+getwd()
 ```
 
 
@@ -44,74 +51,91 @@ A patient has been admitted to the hospital with a severe and rapidly progressin
 You will use BLAST, a tool used in real clinical and research microbiology labs, to compare this unknown sequence against all known biological sequences in the NCBI database.
 
 **1. Read the "gene of interest" sequence from the `goi_01.txt` file into R using the Biostrings package. Store this in an object called `query_seq`.What type sequence is this? (DNA, RNA or Protein) **
-```{r}
-getwd()
-```
-
-```{r}
-query_seq <- readDNAStringSet("data/goi_01.txt")
-```
 
 
 **2.Perform a blastx search using `goi_01.txt` as the query and the "core_nt" database. Download the cluster table results in CSV format, change the name to "goi_01_blastx.csv" and store in the homework/data folder. Read the csv file into R and clean the column names. Save the cleaned data frame as goi_01_blastx.**
-```{r}
-
-```
 
 ```{r}
-
+goi_01_blastx <- read_csv("data/goi_01_blastx.csv") %>% 
+  clean_names()
 ```
 
 **3.Display the top 10 blastx hits, based on e_value, for this blastx search? (Include the Scientific Name, Cluster Anscestor, Cluster Representative Sequence, Max Score, Query Cover, E value and Percent Identity)**
 ```{r}
-
+goi_01_blastx %>%
+  select(scientific_name, 
+         cluster_ancestor,
+         representative_sequence, 
+         max_score, 
+         query_cover, 
+         e_value, 
+         per_ident) %>%
+  arrange(desc(e_value)) %>%
+  slice_head(n = 10)
 ```
  
 
 **4. create a plot that shows the different in percent identity for each Scientific Name of the top 10 blastx hits. Make sure to label your axes and give your plot a title.**
 ```{r}
-
+goi_01_blastx %>%
+  select(scientific_name, per_ident, e_value) %>%
+  arrange(desc(e_value)) %>%
+  slice_head(n = 10) %>%
+  ggplot(aes(x = scientific_name, y = per_ident, fill=scientific_name)) +
+  scale_fill_brewer(palette = "Set3")+
+  geom_col() +
+  labs(title = "Percent Identity of Top 10 blastx Hits",
+       x = "Scientific Name",
+       y = "Percent Identity") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
 
 **5 Perform a blastn search using `goi_01.txt` as the query and the "core_nt" database. Download the alignment description in CSV format, change the name to "goi_01_blastn.csv" and store in the homework/data folder. Read the csv file into R and clean the column names. Save the cleaned data frame as goi_01_blastn.**
 ```{r}
-
-```
-
-```{r}
-
+goi_01_blastn <- read_csv("data/goi_01_blastn.csv") %>% 
+  clean_names()
 ```
 
 **6. What was the top blastn hit, based on e_value, for this blastn search? (Include the Cluster Ancestor, Cluster, Representative Sequence, Max Score, Query Cover, E value, Percent Identity and Accession Link)**
 ```{r}
-
+goi_01_blastn %>%
+  select(scientific_name,
+         max_score, 
+         query_cover, 
+         e_value, 
+         per_ident,
+         accession) %>%
+  arrange(desc(e_value)) %>%
+  slice_head(n = 1)
 ```
+
+Yersinia pestis is the top blastn hit, and the only blastn hit.
 
 **7. Based on the blastx and blastn results, what do you think this gene is and what bacteria do you think it came from?**
-```{}
 
-```
+I think the bacteria is Yersinia pestis and the gene is for the hypothetical protein YpF1991016_2825.
 
 **8. For the top blastn hit, click on the accession link for this bacteria and download the coding sequences as a FASTA Protein file. Read the fasta file into R using the Biostrings package and store it in an object called `goi_blastn_hit`.**
-```{r}
 
+```{r}
+goi_blastn_hit <- readAAStringSet("data/sequence.fasta")
 ```
 
 ```{r}
-
+head(goi_blastn_hit)
 ```
 
 **9. From the same organism, identify 5 other annotated genes? Do these genes suggest about the biology or virulence of this bacterium?** *Annotated genes can be found in the "CDS" section of the GenBank file. You can also find genes by going to summary page for the organism and looking at the "View annotated genes" section.*
+
 ```{r}
 
 ```
 
 
 **10. Now that you have an idea of this bacteria's identity, what illness/disease do you think the patient has? What is the historical or public health significance of this disease? Based on the gene you identified, what role might this gene play in pathogenicity?**
-```{}
 
-```
+This is the bacteria that results in the Plague. This disease has huge historical significance, causing several massive waves of disease in the past and is what caused the Black Death which swept through Europe in the 14th century. The gene is likely involved in the bacteria's ability to infect and cause disease in humans.
 
 
 ## Knit and Upload
