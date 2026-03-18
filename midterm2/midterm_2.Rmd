@@ -102,10 +102,17 @@ polar_bears %>%
 
 ```{r}
 polar_bears %>% 
-  ggplot(aes(x=sex, fill=sex))+
-  geom_bar()+
-  facet_wrap(~popn)+
-  labs(title="Sex Sampling by Population")
+  count(popn, sex)
+```
+
+```{r}
+polar_bears %>% 
+  count(popn, sex) %>% 
+  ggplot(aes(x=popn, y=n, fill=sex))+ 
+  geom_col(position="dodge")+
+  labs(title="Sex Sampling by Population",
+       x="Population",
+       y="Count")
 ```
 
 Sampling was fairly even for both sexes in the CS population, but much more females were sampled in the SB population.
@@ -118,27 +125,20 @@ polar_bears <- polar_bears %>%
 ```
 
 ```{r}
-#polar_bears %>% 
-#  filter(popn=="SB") %>% 
-#  mutate(total_SB=count(popn)) %>%
-#  ggplot(aes(x=year, y=total_SB))+
-#  geom_line(color="tomato3")+
-#  geom_point(shape=3)+
-#  labs(title = "SB Sample Population by Year",
-#       x="Year",
-#      y="Count")
+polar_bears %>% 
+  group_by(year) %>%
+  count(popn) %>%
+  ggplot(aes(x=year, y=n, color=popn, group=popn))+
+  geom_line()+
+  geom_point(shape=2)+
+  labs(title = "Polar Bear Sample Population by Year",
+       x="Year",
+       y="Count",
+       color="Population")+
+  theme(axis.text.x = element_text(angle=60, hjust=1))
 
 ```
-```{r}
-#polar_bears %>% 
-#  filter(popn=="CS") %>% 
-#  ggplot(aes(x=year, y=count(popn)))+
-# geom_line(color="tomato3")+
-#  geom_point(shape=3)+
-#  labs(title = "CS Sample Population by Year",
-#       x="Year",
-#      y="Count")
-```
+
 
 5. (2 points) What are the min, median, mean, and max values for `urea_nitrogen` and `creatinine`?
 
@@ -203,42 +203,50 @@ map1 <- get_stadiamap(bbox, maptype="stamen_terrain", zoom = 7)
 ```
 ```{r}
 ggmap(map1) +
-  geom_point(data=polar_bears, aes(long, lat), size=1, color="tomato3", alpha=0.8)+
-  labs(x="Longitude", y="Latitude", title="Polar Bear Locations")
+  geom_point(data=polar_bears, 
+             aes(long, lat, color=popn), 
+             size=1, 
+             alpha=0.8)+
+  labs(x="Longitude", 
+       y="Latitude", 
+       title="Polar Bear Locations")
 ```
 
 10. (10 points) Build a simple shiny app that shows the range of `un_creat_ratio` values for both populations. The user should be able to select the fill variable and choose between sex, mating, age_class, denning, and fasting. Please use the code chunk below so that your exam knits.
 ```{r, eval=F, echo=T}
-#library(shiny)
+library(shiny)
 
-#ui <- fluidPage(
+ui <- fluidPage(
   
-#  selectizeInput("x",
-#                 "Select X Variable",
-#                 choices=c("sex",
-#                           "mating",
-#                           "age_class",
-#                           "denning",
-#                           "fasting"),
-#                 selected="sex"),
-#    plotOutput("plot",
-#             width="500px",
-#             height="400px")
-#)
+  selectizeInput("x",
+                 "Select X Variable",
+                 choices=c("sex",
+                           "mating",
+                           "age_class",
+                           "denning",
+                           "fasting"),
+                 selected="sex"),
+    plotOutput("plot",
+             width="500px",
+             height="400px")
+)
 
-#server <- function(input, output, session) {
+server <- function(input, output, session) {
   
-#  output$plot <- renderPlot({
+  output$plot <- renderPlot({
   
-#  polar_bears %>% 
-#      ggplot(aes_string(x="fill variable", 
-#                        y=un_creat_ratio, fill=input$x))
-#  geom_col()+
-#  facet_wrap(~popn)})
+  polar_bears %>% 
+    ggplot(aes(x=popn, y=un_creat_ratio, fill=.data[[input$x]]))+
+    geom_boxplot()+
+    labs(title = "Urea Nitrogen to Creatinine Ratio by Population",
+         x="Population",
+         y="Urea Nitrogen to Creatinine Ratio",
+         fill=input$x)
+  })
   
-#}
+}
 
-#shinyApp(ui, server)
+shinyApp(ui, server)
 ```
 
 ## Submit the Midterm
